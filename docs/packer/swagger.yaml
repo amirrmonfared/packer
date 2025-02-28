@@ -1,0 +1,140 @@
+basePath: /api/v1
+definitions:
+  server.CalculatePacksRequest:
+    properties:
+      items:
+        type: integer
+    required:
+    - items
+    type: object
+  server.CalculatePacksResponse:
+    properties:
+      distribution:
+        additionalProperties:
+          type: integer
+        type: object
+      leftover:
+        type: integer
+      order:
+        type: integer
+      total_items_shipped:
+        type: integer
+      total_packs:
+        type: integer
+    type: object
+  server.GetPackSizesResponse:
+    properties:
+      packs:
+        items:
+          type: integer
+        type: array
+    type: object
+  server.UpdatePackSizesRequest:
+    properties:
+      packs:
+        items:
+          type: integer
+        type: array
+    type: object
+  server.UpdatePackSizesResponse:
+    properties:
+      packs:
+        items:
+          type: integer
+        type: array
+    type: object
+info:
+  contact: {}
+  description: A simple pack calculator service.
+  title: Packer Service
+  version: "1.0"
+paths:
+  /calculate:
+    post:
+      consumes:
+      - application/json
+      description: Given a number of items, this calculates how many packs and which
+        sizes to use.
+      parameters:
+      - description: Number of items to pack
+        in: body
+        name: items
+        required: true
+        schema:
+          $ref: '#/definitions/server.CalculatePacksRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/server.CalculatePacksResponse'
+        "400":
+          description: Invalid JSON body or items < 1
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Failed to retrieve pack sizes
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Calculate how many packs are needed
+      tags:
+      - Packs
+  /packs:
+    get:
+      description: Retrieves the list of currently available pack sizes.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/server.GetPackSizesResponse'
+        "500":
+          description: Failed to retrieve pack sizes
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get pack sizes
+      tags:
+      - Packs
+    post:
+      consumes:
+      - application/json
+      description: Updates the list of available pack sizes (e.g., 250, 500, 1000,
+        etc.).
+      parameters:
+      - description: New pack sizes
+        in: body
+        name: packs
+        required: true
+        schema:
+          $ref: '#/definitions/server.UpdatePackSizesRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/server.UpdatePackSizesResponse'
+        "400":
+          description: Invalid JSON body or no packs provided
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Failed to update pack sizes
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Update pack sizes
+      tags:
+      - Packs
+swagger: "2.0"

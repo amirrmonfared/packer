@@ -1,0 +1,129 @@
+{
+    "info": {
+      "name": "Packer API",
+      "_postman_id": "8b930c77-1dcd-4bc5-bd27-d76bd771e24d",
+      "description": "Postman collection for the Packer service",
+      "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "variable": [
+      {
+        "key": "base_url",
+        "value": "http://localhost:8080",
+        "type": "string"
+      }
+    ],
+    "item": [
+      {
+        "name": "Health Check",
+        "request": {
+          "method": "GET",
+          "header": [],
+          "body": {},
+          "url": {
+            "raw": "{{base_url}}/healthz",
+            "host": [
+              "{{base_url}}"
+            ],
+            "path": [
+              "healthz"
+            ]
+          }
+        },
+        "response": []
+      },
+      {
+        "name": "Get Pack Sizes",
+        "request": {
+          "method": "GET",
+          "header": [],
+          "url": {
+            "raw": "{{base_url}}/api/v1/packs",
+            "host": [
+              "{{base_url}}"
+            ],
+            "path": [
+              "api",
+              "v1",
+              "packs"
+            ]
+          }
+        },
+        "response": []
+      },
+      {
+        "name": "Update Pack Sizes",
+        "request": {
+          "method": "POST",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"packs\": [250, 500, 1000, 2000, 5000]\n}"
+          },
+          "url": {
+            "raw": "{{base_url}}/api/v1/packs",
+            "host": [
+              "{{base_url}}"
+            ],
+            "path": [
+              "api",
+              "v1",
+              "packs"
+            ]
+          }
+        },
+        "response": []
+      },
+      {
+        "name": "Calculate Packs",
+        "request": {
+          "method": "POST",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"items\": 1700\n}"
+          },
+          "url": {
+            "raw": "{{base_url}}/api/v1/calculate",
+            "host": [
+              "{{base_url}}"
+            ],
+            "path": [
+              "api",
+              "v1",
+              "calculate"
+            ]
+          }
+        },
+        "response": []
+      },
+      {
+        "name": "Swagger UI",
+        "request": {
+          "method": "GET",
+          "header": [],
+          "url": {
+            "raw": "{{base_url}}/swagger/index.html",
+            "host": [
+              "{{base_url}}"
+            ],
+            "path": [
+              "swagger",
+              "index.html"
+            ]
+          }
+        },
+        "response": []
+      }
+    ]
+  }
+  

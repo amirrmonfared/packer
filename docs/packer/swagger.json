@@ -1,0 +1,212 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "A simple pack calculator service.",
+        "title": "Packer Service",
+        "contact": {},
+        "version": "1.0"
+    },
+    "basePath": "/api/v1",
+    "paths": {
+        "/calculate": {
+            "post": {
+                "description": "Given a number of items, this calculates how many packs and which sizes to use.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Packs"
+                ],
+                "summary": "Calculate how many packs are needed",
+                "parameters": [
+                    {
+                        "description": "Number of items to pack",
+                        "name": "items",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/server.CalculatePacksRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/server.CalculatePacksResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid JSON body or items \u003c 1",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Failed to retrieve pack sizes",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/packs": {
+            "get": {
+                "description": "Retrieves the list of currently available pack sizes.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Packs"
+                ],
+                "summary": "Get pack sizes",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/server.GetPackSizesResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Failed to retrieve pack sizes",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Updates the list of available pack sizes (e.g., 250, 500, 1000, etc.).",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Packs"
+                ],
+                "summary": "Update pack sizes",
+                "parameters": [
+                    {
+                        "description": "New pack sizes",
+                        "name": "packs",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/server.UpdatePackSizesRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/server.UpdatePackSizesResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid JSON body or no packs provided",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Failed to update pack sizes",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "server.CalculatePacksRequest": {
+            "type": "object",
+            "required": [
+                "items"
+            ],
+            "properties": {
+                "items": {
+                    "type": "integer"
+                }
+            }
+        },
+        "server.CalculatePacksResponse": {
+            "type": "object",
+            "properties": {
+                "distribution": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "integer"
+                    }
+                },
+                "leftover": {
+                    "type": "integer"
+                },
+                "order": {
+                    "type": "integer"
+                },
+                "total_items_shipped": {
+                    "type": "integer"
+                },
+                "total_packs": {
+                    "type": "integer"
+                }
+            }
+        },
+        "server.GetPackSizesResponse": {
+            "type": "object",
+            "properties": {
+                "packs": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                }
+            }
+        },
+        "server.UpdatePackSizesRequest": {
+            "type": "object",
+            "properties": {
+                "packs": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                }
+            }
+        },
+        "server.UpdatePackSizesResponse": {
+            "type": "object",
+            "properties": {
+                "packs": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                }
+            }
+        }
+    }
+}
