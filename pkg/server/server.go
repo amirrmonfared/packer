@@ -1,7 +1,6 @@
 package server
 
 import (
-	"context"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -65,7 +64,7 @@ func (h *PackHandler) UpdatePackSizes(c *gin.Context) {
 		return
 	}
 
-	if err := h.Store.UpdatePackSizes(context.Background(), req.Packs); err != nil {
+	if err := h.Store.UpdatePackSizes(c, req.Packs); err != nil {
 		logrus.WithError(err).Error("Failed to update pack sizes in memory")
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to update pack sizes"})
 		return
@@ -137,7 +136,7 @@ func (h *PackHandler) CalculatePacks(c *gin.Context) {
 		return
 	}
 
-	packs, err := h.Store.GetPackSizes(context.Background())
+	packs, err := h.Store.GetPackSizes(c)
 	if err != nil {
 		logrus.WithError(err).Error("Could not retrieve pack sizes for calculation")
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to retrieve pack sizes"})
