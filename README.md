@@ -96,13 +96,12 @@ Should return:
 A Dockerfile is located in `images/packer/Dockerfile` (or you can use the main Dockerfile in the repository root). For example, to build from the root `Dockerfile`, run:
 
 ```bash
-docker build -t packer-service .
+docker build -t packer-service -f images/packer/Dockerfile .
 ```
 
 ### Running the Container
 
-```bash
-docker run -d -p 8080:8080 packer-service
+```bashdocker run --rm -p 8080:8080 packer-service
 ```
 
 You can then visit `http://localhost:8080/healthz` to ensure the service is responding.

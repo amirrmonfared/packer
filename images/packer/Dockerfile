@@ -11,5 +11,6 @@ RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o packer ./cmd/pack
 
 FROM alpine:3.18
 COPY --from=builder /app/packer /usr/bin/packer
+COPY --from=builder /app/web /web
 
 ENTRYPOINT ["/usr/bin/packer"]

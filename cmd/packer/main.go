@@ -63,6 +63,11 @@ func main() {
 
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
+	r.Static("/web", "./web")
+	r.GET("/", func(c *gin.Context) {
+		c.File("./web/index.html")
+	})
+
 	logrus.Infof("Starting Pack Calculator on port %d", opts.port)
 	if err := r.Run(fmt.Sprintf(":%d", opts.port)); err != nil {
 		logrus.WithError(err).Fatal("error occurred while running the api server")

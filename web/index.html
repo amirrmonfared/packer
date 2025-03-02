@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Packer UI</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 2rem;
+      }
+      .section {
+        margin-bottom: 2rem;
+      }
+      input,
+      button {
+        margin: 0.3rem 0;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Pack Calculator</h1>
+
+    <div class="section" id="packs-section">
+      <h2>Current Pack Sizes</h2>
+      <p>
+        <button onclick="fetchPackSizes()">Load Pack Sizes</button>
+      </p>
+      <div id="pack-list"></div>
+
+      <h3>Update Pack Sizes</h3>
+      <p>Enter comma-separated pack sizes:</p>
+      <input id="newPacks" type="text" placeholder="e.g. 250,500,1000" />
+      <button onclick="updatePackSizes()">Update</button>
+      <p id="updateResult"></p>
+    </div>
+
+    <div class="section" id="calculate-section">
+      <h2>Calculate Packs</h2>
+      <p>Enter number of items:</p>
+      <input id="itemsInput" type="number" placeholder="e.g. 1200" />
+      <button onclick="calculate()">Calculate</button>
+      <div id="calculateResult"></div>
+    </div>
+
+    <script>
+      const baseUrl = window.location.origin + '/api/v1';
+
+      async function fetchPackSizes() {
+        try {
+          const res = await fetch(`${baseUrl}/packs`);
+          if (!res.ok) throw new Error('Failed to fetch pack sizes');
+          const data = await res.json();
+          document.getElementById('pack-list').textContent = JSON.stringify(data.packs);
+        } catch (err) {
+          alert(err.message);
+        }
+      }
+
+      async function updatePackSizes() {
+        const input = document.getElementById('newPacks').value;
+        if (!input) return alert('Please enter new pack sizes!');
+        const packsArray = input
+          .split(',')
+          .map(str => parseInt(str.trim()))
+          .filter(num => !isNaN(num));
+
+        try {
+          const res = await fetch(`${baseUrl}/packs`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ packs: packsArray })
+          });
+          if (!res.ok) throw new Error('Failed to update pack sizes');
+          const data = await res.json();
+          document.getElementById('updateResult').textContent = 'Pack sizes updated: ' + JSON.stringify(data.packs);
+        } catch (err) {
+          alert(err.message);
+        }
+      }
+
+      async function calculate() {
+        const items = document.getElementById('itemsInput').value;
+        if (!items) return alert('Please enter a number of items!');
+        try {
+          const res = await fetch(`${baseUrl}/calculate`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ items: parseInt(items, 10) })
+          });
+          if (!res.ok) throw new Error('Failed to calculate');
+          const data = await res.json();
+          const msg = `
+            Order: ${data.order}
+            Leftover: ${data.leftover}
+            Total Packs: ${data.total_packs}
+            Distribution: ${JSON.stringify(data.distribution)}
+            Total Items Shipped: ${data.total_items_shipped}
+          `;
+          document.getElementById('calculateResult').textContent = msg;
+        } catch (err) {
+          alert(err.message);
+        }
+      }
+    </script>
+  </body>
+</html>
